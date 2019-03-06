@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <aop:config>
+        <aop:aspect ref="audience">
+            <aop:pointcut id="performance" expression="execution(* com.note.demo.aop.interf.Performance.perform(..))"/>
+            <aop:before method="silenceCellPhone" pointcut-ref="performance"/>
+            <aop:before method="takeSeats" pointcut-ref="performance"/>
+            <aop:after-returning method="applause" pointcut-ref="performance"/>
+            <aop:after-throwing method="demandRefund" pointcut-ref="performance"/>
+            <aop:around method="watchPerformance" pointcut-ref="performance"/>
+            <!--<aop:pointcut id="counter" expression="execution(* com.note.demo.aop.interf.Performance.countPrograms(int)) and args(id)"/>
+            <aop:before method="counter" pointcut-ref="counter"/>-->
+            <aop:before method="counter" pointcut="execution(* com.note.demo.aop.interf.Performance.countPrograms(int)) and args(id)"/>
+            <aop:declare-parents types-matching="com.note.demo.aop.interf.Performance+"
+                                 implement-interface="com.note.demo.aop.interf.Encoreable"
+                                 default-impl="com.note.demo.aop.impl.DefaultEncoreable"/>
+        </aop:aspect>
+    </aop:config>
+
+    <bean id="audience" class="com.note.demo.Audience"/>
+
+    <bean id="performance" class="com.note.demo.aop.impl.PerformanceImpl"/>
+
+    <bean class="com.note.demo.aop.AspectJAspect" factory-method="aspectOf">
+        <property name="performance" ref="performance" />
+    </bean>
+</beans>
