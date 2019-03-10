@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @date 2019/3/1 下午3:27
  * @description
  */
-//@Component
+@Component
 @Data
 public class PerformanceImpl implements Performance {
     @Override
